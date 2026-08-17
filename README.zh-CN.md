@@ -4,7 +4,7 @@
 
 *[English](./README.md)*
 
-## 这是干嘛的？
+## 项目简介
 
 你用过 [claude2codex](https://github.com/PrestoOverture/c2c) 吗？那个项目让 Claude 当架构师，把实现工作通过 MCP 服务器派给 Codex 去做。效果挺好，但你得有 Codex 订阅，还得跑一个 MCP 服务器。
 
@@ -15,7 +15,7 @@
 - 任务不大，不值得折腾外部工具
 - 就想用合同工作流，但懒得装任何东西
 
-## 怎么运作的？
+## 如何运作
 
 说白了就是一个 Claude 扮演两个角色：
 

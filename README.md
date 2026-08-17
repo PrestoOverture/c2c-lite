@@ -2,6 +2,8 @@
 
 A Claude Code Skill that lets you delegate implementation to a Claude subagent through structured Goal Contracts — the same architect/implementer workflow as [claude2codex](https://github.com/PrestoOverture/c2c), but without Codex or any external dependency.
 
+*[中文版](./README.zh-CN.md)*
+
 ## Why
 
 [claude2codex](https://github.com/PrestoOverture/c2c) bridges Claude (architect) and Codex (implementer) via an MCP server. It works well, but requires a Codex subscription and a running MCP server.

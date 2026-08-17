@@ -1,70 +1,79 @@
 # c2c-lite
 
-一个 Claude Code Skill，让你通过结构化 Goal Contract 将实现工作委派给 Claude 子代理——与 [claude2codex](https://github.com/PrestoOverture/c2c) 相同的架构师/实现者工作流，但不需要 Codex 或任何外部依赖。
+让 Claude 把写代码的活儿派给另一个 Claude——不需要 Codex，不需要 MCP，装一个文件就能用。
 
-## 为什么做这个
+*[English](./README.md)*
 
-[claude2codex](https://github.com/PrestoOverture/c2c) 通过 MCP 服务器连接 Claude（架构师）和 Codex（实现者）。它运作良好，但需要 Codex 订阅和运行中的 MCP 服务器。
+## 这是干嘛的？
 
-**c2c-lite** 将依赖降到零：Claude 使用 Claude Code 内置的 `Agent` 工具将任务委派给 Claude 子代理（默认 Sonnet）。相同的契约格式，相同的审查纪律，无需基础设施。
+你用过 [claude2codex](https://github.com/PrestoOverture/c2c) 吗？那个项目让 Claude 当架构师，把实现工作通过 MCP 服务器派给 Codex 去做。效果挺好，但你得有 Codex 订阅，还得跑一个 MCP 服务器。
 
-适用场景：
-- Codex 不可用（没有订阅、API 宕机、限流）
-- 任务不值得启动外部进程
-- 想用契约工作流但不想做任何配置
+**c2c-lite** 把这个模式简化到了极致：不需要 Codex，不需要 MCP，Claude 直接派活给自己的一个"分身"（子代理，默认用 Sonnet）。合同格式一模一样，审查流程一模一样，但**零配置**。
 
-## 工作原理
+什么时候用它：
+- Codex 欠费了 / API 挂了 / 被限流了
+- 任务不大，不值得折腾外部工具
+- 就想用合同工作流，但懒得装任何东西
+
+## 怎么运作的？
+
+说白了就是一个 Claude 扮演两个角色：
 
 ```
-你（用户）
-  → Claude Opus（架构师）— 起草 Goal Contract
-    → Claude Sonnet（子代理/实现者）— 编写代码、运行测试
-  ← Claude Opus — 审查产出、报告发现
-← 你 — 批准或要求返工
+你
+  → Opus（老板）—— 写需求合同，审查代码
+    → Sonnet（打工人）—— 写代码，跑测试
+  ← Opus —— 告诉你结果怎么样
+← 你 —— 拍板通过，或者让它返工
 ```
 
-没有 MCP 服务器。没有外部进程。只是 Claude 通过内置的 `Agent` 工具与 Claude 对话。
+没有外部进程。Claude Code 里内置的 `Agent` 工具就够了。
 
 ## 安装
 
+一行命令：
+
 ```sh
-mkdir -p ~/.claude/skills
-curl -fsSL https://raw.githubusercontent.com/PrestoOverture/c2c-lite/main/c2c-lite.skill.md -o ~/.claude/skills/c2c-lite.md
+mkdir -p ~/.claude/skills && curl -fsSL https://raw.githubusercontent.com/PrestoOverture/c2c-lite/main/c2c-lite.skill.md -o ~/.claude/skills/c2c-lite.md
 ```
 
-或者手动复制——整个东西就是一个 Markdown 文件。
+就这样。整个东西就是一个 Markdown 文件。
 
-## 使用
+## 怎么用？
 
-在任何 Claude Code 会话中，输入 `/c2c-lite` 并描述你想做什么。Claude 会：
+在 Claude Code 里输入 `/c2c-lite`，然后说你想做什么。比如"给我加一个 /health 接口"。
 
-1. 起草 Goal Contract 并展示给你
-2. 你批准后，生成一个子代理来实现
-3. 独立审查子代理的工作
-4. 报告发现供你批准
+Claude 会：
 
-如果审查失败，Claude 向同一个子代理发送 Delta Contract（保留上下文）进行针对性返工。
+1. **写一份 Goal Contract**（目标、约束、验收条件）给你看
+2. 你说"行"，它就 **spawn 一个子代理**去写代码
+3. 子代理写完了，Claude **自己跑一遍测试**验证
+4. 把结果 **报给你**——过了就过了，没过就告诉你哪里有问题
 
-### 模型选择
+没过的话？Claude 写一份 Delta Contract（只说哪里不对），发给**同一个子代理**让它改。上下文保留着，不用从头来。
 
-默认实现者模型是 Sonnet。你可以在批准时指定不同的模型：
+## 选模型
 
-- **Sonnet**（默认）— 快速、性价比高，适合大多数任务
-- **Opus** — 更强的推理能力，适合复杂或模糊的任务
-- **Haiku** — 最快、最便宜，适合简单/机械性的改动
+默认让 Sonnet 干活。批准合同的时候你可以换：
 
-## 与 claude2codex 的对比
+- **Sonnet**（默认）—— 又快又便宜，大多数活儿够用
+- **Opus** —— 推理更强，逻辑复杂的活儿用这个
+- **Haiku** —— 最快最便宜，简单改动用这个
+
+## 和 claude2codex 有什么区别？
 
 | | c2c-lite | claude2codex |
 |---|---|---|
-| 实现者 | Claude 子代理 | OpenAI Codex |
-| 依赖 | 无 | Codex CLI + MCP 服务器 |
-| 配置 | 复制一个文件 | `npx claude2codex` + MCP 配置 |
-| Goal loop | 单次执行（Agent 工具） | Codex `/goal` 循环（迭代直到完成） |
-| 持久化 | 无（仅会话内） | 任务持久化到磁盘 |
-| 成本预估 | 不可用 | `codex_estimate` 工具 |
-| 并行任务 | 支持（多个 Agent 调用） | 支持（`C2C_MAX_CONCURRENT`） |
-| 返工 | `SendMessage` 到同一代理 | `codex_rework` 恢复线程 |
+| 干活的是谁 | Claude 子代理 | OpenAI Codex |
+| 要装什么 | 复制一个文件 | Codex CLI + MCP 服务器 |
+| 配置 | 零 | `npx claude2codex` + MCP 配置 |
+| 执行方式 | 单次（Agent 工具） | Codex goal 循环（自动迭代直到搞定） |
+| 任务持久化 | 没有（会话结束就没了） | 有（写到磁盘，重启不丢） |
+| 成本预估 | 没有 | 有（`codex_estimate`） |
+| 并行任务 | 能（多个 Agent 同时跑） | 能（`C2C_MAX_CONCURRENT`） |
+| 返工 | 给同一个子代理发消息 | `codex_rework` 恢复线程 |
+
+简单说：**c2c-lite 是轻量版，开箱即用；claude2codex 是完整版，功能更多但要配置。**
 
 ## 协议
 

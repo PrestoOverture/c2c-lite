@@ -37,6 +37,7 @@ Only what the subagent would get wrong without being told. One line of
 
 When spawning the subagent, write a self-contained prompt. The subagent has no context from this conversation. Include:
 
+- "Read `AGENTS.md` first for project-specific toolchain and boundaries." (if the project has one)
 - The full Goal Contract.
 - File paths and enough context to act without this conversation.
 - "IMPORTANT: You are authorized to edit code directly. Make the changes, then run the verification commands and report results."

@@ -67,7 +67,7 @@ Claude 会：
 | 干活的是谁 | Claude 子代理 | OpenAI Codex |
 | 要装什么 | 复制一个文件 | Codex CLI + MCP 服务器 |
 | 配置 | 零 | `npx claude2codex` + MCP 配置 |
-| 执行方式 | 单次（Agent 工具） | Codex goal 循环（自动迭代直到搞定） |
+| 执行方式 | 自验证循环（prompt 驱动） | Codex goal 循环（自动迭代直到搞定） |
 | 任务持久化 | 没有（会话结束就没了） | 有（写到磁盘，重启不丢） |
 | 成本预估 | 没有 | 有（`codex_estimate`） |
 | 并行任务 | 能（多个 Agent 同时跑） | 能（`C2C_MAX_CONCURRENT`） |

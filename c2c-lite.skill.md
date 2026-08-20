@@ -42,8 +42,25 @@ When spawning the subagent, write a self-contained prompt. The subagent has no c
 - File paths and enough context to act without this conversation.
 - "IMPORTANT: You are authorized to edit code directly. Make the changes, then run the verification commands and report results."
 - The verification commands to run after making changes.
+- The **self-verification loop** instructions (see below).
 
 Do NOT tell the subagent to "draft a plan" or "propose changes" — tell it to implement and verify.
+
+### Self-Verification Loop
+
+Include this block verbatim at the end of every delegation prompt:
+
+```
+After making your changes, run ALL verification commands from the Success Conditions.
+If any command fails:
+1. Read the error output carefully.
+2. Fix the root cause.
+3. Re-run ALL verification commands (not just the one that failed).
+4. Repeat until every command passes.
+Do not report back until all verifications succeed, or you are stuck on a problem you cannot resolve.
+```
+
+This makes the subagent iterate toward success instead of reporting on the first attempt. The architect still independently re-runs verifications during Review — this loop reduces rework rounds, not replaces review.
 
 ## Delta Contract (rework)
 

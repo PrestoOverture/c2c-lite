@@ -62,7 +62,7 @@ The default implementer model is Sonnet. You can specify a different model when 
 | Implementer | Claude subagent | OpenAI Codex |
 | Dependencies | None | Codex CLI + MCP server |
 | Setup | Copy one file | `npx claude2codex` + MCP config |
-| Goal loop | Single-shot (Agent tool) | Codex `/goal` loop (iterates until done) |
+| Goal loop | Self-verification loop (prompt-driven) | Codex `/goal` loop (iterates until done) |
 | Persistence | None (in-session only) | Jobs persisted to disk |
 | Cost estimation | Not available | `codex_estimate` tool |
 | Parallel jobs | Yes (multiple Agent calls) | Yes (`C2C_MAX_CONCURRENT`) |

@@ -29,6 +29,7 @@ Only what the subagent would get wrong without being told. One line of
 
 ### Success Conditions
 - [ ] Assertions, not paragraphs. At least one is a command whose exit code decides.
+- [ ] Each must be falsifiable: describe how it fails when the defect exists. If you can't, replace it.
 ```
 
 **Write lean contracts.** Goal and Success Conditions are what the subagent acts on. Constraints are for genuine risks only — don't front-load your review checklist into the contract.
@@ -83,6 +84,7 @@ Use `SendMessage` with the subagent's ID so it retains context from the first at
 
 1. Check the subagent's reported results. Did it claim all verifications passed?
 2. Re-run every verification command yourself — do not trust the subagent's claims.
-3. Run the project's own typecheck/build/test/lint.
-4. Read the diff — check for correctness, security issues, and constraint violations.
-5. Report findings to the user. Fix small issues (typos, imports) directly; do not rewrite the implementation.
+3. Verify falsifiability: each success condition must fail when the defect is present. A check that passes regardless is a review failure.
+4. Run the project's own typecheck/build/test/lint.
+5. Read the diff — check for correctness, security issues, and constraint violations.
+6. Report findings to the user. Fix small issues (typos, imports) directly; do not rewrite the implementation.

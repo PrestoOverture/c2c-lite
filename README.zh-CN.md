@@ -34,7 +34,7 @@
 一行命令：
 
 ```sh
-mkdir -p ~/.claude/skills && curl -fsSL https://raw.githubusercontent.com/PrestoOverture/c2c-lite/main/c2c-lite.skill.md -o ~/.claude/skills/c2c-lite.md
+mkdir -p ~/.claude/skills/c2c-lite && curl -fsSL https://raw.githubusercontent.com/PrestoOverture/c2c-lite/main/c2c-lite.skill.md -o ~/.claude/skills/c2c-lite/SKILL.md
 ```
 
 就这样。整个东西就是一个 Markdown 文件。

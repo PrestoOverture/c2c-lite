@@ -30,8 +30,8 @@ No MCP server. No external process. Just Claude talking to Claude through the bu
 ## Installation
 
 ```sh
-mkdir -p ~/.claude/skills
-curl -fsSL https://raw.githubusercontent.com/PrestoOverture/c2c-lite/main/c2c-lite.skill.md -o ~/.claude/skills/c2c-lite.md
+mkdir -p ~/.claude/skills/c2c-lite
+curl -fsSL https://raw.githubusercontent.com/PrestoOverture/c2c-lite/main/c2c-lite.skill.md -o ~/.claude/skills/c2c-lite/SKILL.md
 ```
 
 Or copy manually — the entire thing is one Markdown file.
